@@ -19,10 +19,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
+
+      - name: Check Node.js version
+        run: node --version
 
       - name: Install Newman
-        run: npm install -g newman
+        run: npm install -g newman@latest
 
       - name: Run Postman Tests
-        run: newman run store.collection.json
+        run: npx newman run store.collection.json
