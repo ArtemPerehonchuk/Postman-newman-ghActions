@@ -29,3 +29,9 @@ jobs:
           npm run tern-on-api & 
           sleep 5 
           npm run test:api
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: newman-report
+          path: output.html
