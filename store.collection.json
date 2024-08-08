@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "67d91bc7-aa8b-4727-aad5-9abcb298ed08",
+		"_postman_id": "afaf9ba7-44da-4de3-b971-295ca0ffc3f1",
 		"name": "store",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18317683"
+		"_exporter_id": "22000535",
+		"_collection_link": "https://speeding-sunset-153958.postman.co/workspace/Test-API~9d3773e7-db13-4d98-a370-a5088e6c0e23/collection/22000535-afaf9ba7-44da-4de3-b971-295ca0ffc3f1?action=share&source=collection_link&creator=22000535"
 	},
 	"item": [
 		{
@@ -24,9 +25,55 @@
 									"});\r",
 									"pm.test(\"Content-Type is present\", function () {\r",
 									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    const jsonResponse = pm.response.json();\r",
+									"    pm.expect(jsonResponse).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -46,18 +93,413 @@
 					"response": []
 				},
 				{
-					"name": "Get product by ID",
+					"name": "Sort products by name in ascending order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is sorted by name in ascending order\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    const compareStrings = (a, b) => a.localeCompare(b);\r",
+									"\r",
+									"    for (let i = 0; i < jsonData.length - 1; i++) {\r",
+									"        const current = jsonData[i].name;\r",
+									"        const next = jsonData[i + 1].name;\r",
+									"\r",
+									"        pm.expect(compareStrings(current, next)).to.be.lessThan(1);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/products/3",
+							"raw": "{{baseUrl}}/products?sortOrder=ASC&sortKey=name",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "sortKey",
+									"value": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get paginated products list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"price\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"description\": {\r",
+									"        \"type\": \"string\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct number of products\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    const page = parseInt(pm.collectionVariables.get('page'), 10);\r",
+									"    const pageSize = parseInt(pm.collectionVariables.get('pageSize'), 10);\r",
+									"    \r",
+									"    pm.expect(jsonData.length).to.eql(pageSize);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response page is correct\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    const page = parseInt(pm.collectionVariables.get('page'), 10);\r",
+									"    const pageSize = parseInt(pm.collectionVariables.get('pageSize'), 10);\r",
+									"    \r",
+									"    pm.expect(jsonData.length).to.be.at.most(pageSize);\r",
+									"\r",
+									"    if (jsonData.length > 0) {\r",
+									"        const startIndex = (page - 1) * pageSize;\r",
+									"        const endIndex = startIndex + jsonData.length - 1;\r",
+									"        pm.expect(startIndex).to.be.at.least(0);\r",
+									"        pm.expect(endIndex).to.be.at.most(pageSize - 1);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const url = pm.request.url.toString();",
+									"",
+									"function getQueryParams(url) {",
+									"    const params = {};",
+									"    const queryStringIndex = url.indexOf('?');",
+									"",
+									"    if (queryStringIndex !== -1) {",
+									"        const queryString = url.substring(queryStringIndex + 1);",
+									"",
+									"        queryString.split('&').forEach(param => {",
+									"            const [key, value] = param.split('=');",
+									"            params[key] = decodeURIComponent(value);",
+									"        });",
+									"    }",
+									"",
+									"    return params;",
+									"}",
+									"",
+									"const queryParams = getQueryParams(url);",
+									"const page = queryParams['page'] || '1';  ",
+									"const pageSize = queryParams['pageSize'] || '4'; ",
+									"",
+									"pm.collectionVariables.set('page', page);",
+									"pm.collectionVariables.set('pageSize', pageSize);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products?page=1&pageSize=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/products',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const productIds = responseJson.map(product => product.id);",
+									"",
+									"    pm.collectionVariables.set('productIds', productIds.join(','));",
+									"",
+									"    function getRandomProductId(array) {",
+									"        const randomIndex = Math.floor(Math.random() * array.length);",
+									"        return array[randomIndex];",
+									"    }",
+									"",
+									"    if (productIds.length > 0) {",
+									"        const productId = getRandomProductId(productIds);",
+									"        pm.collectionVariables.set('productId', productId);",
+									"    } else {",
+									"        pm.collectionVariables.set('productId', '');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id value\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const productId = pm.collectionVariables.get('productId');",
+									"    pm.expect(jsonData.id).to.eql(productId);",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"name\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"price\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"sku\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"description\": {",
+									"        \"type\": \"string\"",
+									"      }",
+									"    },",
+									"    \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{productId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"products",
-								"3"
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by invalid ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									" function getRandomString(length) {",
+									"    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';",
+									"    let result = '';",
+									"    for (let i = 0; i < length; i++) {",
+									"        result += charset.charAt(Math.floor(Math.random() * charset.length));",
+									"    }",
+									"    return result;",
+									"}",
+									"",
+									"const randomString = getRandomString(5);",
+									"",
+									"pm.collectionVariables.set('randomString', randomString);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(404);",
+									"    pm.expect(statusText).to.eql('Not Found');",
+									"});",
+									"",
+									"pm.test(\"Response is an empty object\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(Object.keys(responseData)).to.have.lengthOf(0);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{randomString}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{randomString}}"
 							]
 						}
 					},
@@ -65,12 +507,119 @@
 				},
 				{
 					"name": "Create product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function getRandomString(length) {",
+									"    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';",
+									"    let result = '';",
+									"    for (let i = 0; i < length; i++) {",
+									"        result += charset.charAt(Math.floor(Math.random() * charset.length));",
+									"    }",
+									"    return result;",
+									"}",
+									"",
+									"function getRandomNumber() {",
+									"    return Math.floor(Math.random() * 10000);",
+									"}",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/products',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const productIds = responseJson.map(product => product.id);",
+									"    const productId = productIds.length + 1;",
+									"    pm.collectionVariables.set('productId', productId);",
+									"});",
+									"",
+									"const randomName = `name_${getRandomString(5)}`;",
+									"const randomPrice = getRandomNumber();",
+									"const randomSku = getRandomNumber();",
+									"const randomDescription = `desc_${getRandomString(10)}`; ",
+									"",
+									"pm.collectionVariables.set('randomName', randomName);",
+									"pm.collectionVariables.set('randomPrice', randomPrice);",
+									"pm.collectionVariables.set('randomSku', randomSku);",
+									"pm.collectionVariables.set('randomDescription', randomDescription);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"name\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"price\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"sku\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"description\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  },",
+									"  \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(201);",
+									"    pm.expect(statusText).to.eql('Created');",
+									"});",
+									"",
+									"pm.test(\"Check created product\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const productId = pm.collectionVariables.get('productId')",
+									"    const productName = pm.collectionVariables.get('randomName');",
+									"    const productPrice = pm.collectionVariables.get('randomPrice');",
+									"    const productSku = pm.collectionVariables.get('randomSku');",
+									"    const productDescription = pm.collectionVariables.get('randomDescription');",
+									"",
+									"    pm.expect(jsonData.id).to.eql(productId);",
+									"    pm.expect(jsonData.name).to.eql(productName);",
+									"    pm.expect(jsonData.price).to.eql(productPrice);",
+									"    pm.expect(jsonData.sku).to.eql(productSku);",
+									"    pm.expect(jsonData.description).to.eql(productDescription);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"orange\",\r\n    \"price\": 8,\r\n    \"sku\": 123321123,\r\n    \"description\": \"wouh\"\r\n}",
+							"raw": "{\r\n    \"id\": {{productId}},\r\n    \"name\": \"{{randomName}}\",\r\n    \"price\": {{randomPrice}},\r\n    \"sku\": {{randomSku}},\r\n    \"description\": \"{{randomDescription}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,12 +640,113 @@
 				},
 				{
 					"name": "Update product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function getRandomInt(min, max) {",
+									"    return Math.floor(Math.random() * (max - min + 1)) + min;",
+									"}",
+									"",
+									"function getRandomString(length) {",
+									"    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';",
+									"    let result = '';",
+									"    for (let i = 0; i < length; i++) {",
+									"        result += charset.charAt(Math.floor(Math.random() * charset.length));",
+									"    }",
+									"    return result;",
+									"}",
+									"",
+									"function getRandomNumber() {",
+									"    return Math.floor(Math.random() * 10000);",
+									"}",
+									"",
+									"const randomInt = getRandomInt(4, 10);",
+									"const randomName = `name_${getRandomString(5)}`;",
+									"const randomPrice = getRandomNumber();",
+									"const randomSku = getRandomNumber();",
+									"const randomDescription = `desc_${getRandomString(10)}`; ",
+									"pm.collectionVariables.set('randomInt', randomInt);",
+									"pm.collectionVariables.set('randomName', randomName);",
+									"pm.collectionVariables.set('randomPrice', randomPrice);",
+									"pm.collectionVariables.set('randomSku', randomSku);",
+									"pm.collectionVariables.set('randomDescription', randomDescription);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"id\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"name\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"price\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"sku\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"description\": {",
+									"      \"type\": \"string\"",
+									"    }",
+									"  },",
+									"  \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]",
+									"};",
+									"",
+									"const productName = pm.collectionVariables.get('randomName');",
+									"const productPrice = pm.collectionVariables.get('randomPrice');",
+									"const productSku = pm.collectionVariables.get('randomSku');",
+									"const productDescription = pm.collectionVariables.get('randomDescription');",
+									"const productId = pm.collectionVariables.get('randomInt');",
+									"",
+									"if(pm.response.code === 200) {",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"}); ",
+									"pm.test(\"Check updated product\", function () {",
+									"    const responseJson = pm.response.json();",
+									"",
+									"    pm.expect(responseJson.id).to.eql(productId);",
+									"    pm.expect(responseJson.name).to.eql(productName);",
+									"    pm.expect(responseJson.price).to.eql(productPrice);",
+									"    pm.expect(responseJson.sku).to.eql(productSku);",
+									"    pm.expect(responseJson.description).to.eql(productDescription);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"} else {",
+									"    pm.test(\"Check error\", function () {",
+									"        const randomInt = pm.collectionVariables.get('randomInt');",
+									"        pm.response.to.have.status(404);",
+									"        pm.response.to.have.body(`Item not found with ID${randomInt}`);",
+									"    })",
+									"};",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"banana\",\r\n    \"price\": 155,\r\n    \"sku\": 123321123,\r\n    \"description\": \"changed description\"\r\n}",
+							"raw": "{\r\n    \"id\": {{randomInt}},\r\n    \"name\": \"{{randomName}}\",\r\n    \"price\": {{randomPrice}},\r\n    \"sku\": {{randomSku}},\r\n    \"description\": \"{{randomDescription}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -117,17 +767,103 @@
 				},
 				{
 					"name": "Remove product by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"        \"id\": {",
+									"            \"type\": \"integer\"",
+									"        },",
+									"        \"name\": {",
+									"            \"type\": \"string\"",
+									"        },",
+									"        \"price\": {",
+									"            \"type\": \"integer\"",
+									"        },",
+									"        \"sku\": {",
+									"            \"type\": \"integer\"",
+									"        },",
+									"        \"description\": {",
+									"            \"type\": \"string\"",
+									"        }",
+									"    },",
+									"    \"required\": [\"id\", \"name\", \"price\", \"sku\", \"description\"]",
+									"};",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response matches schema\", function () {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/products/' + responseJson.id,",
+									"    method: 'GET'",
+									"}, function (err, res) {",
+									"    pm.test(\"Product should not exist after deletion\", function () {",
+									"        if (res) {",
+									"            pm.expect(res).to.have.status(404); ",
+									"        } else {",
+									"            console.error('Error checking product existence:', err);",
+									"        }",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/products',",
+									"    method: 'GET'",
+									"}, function (err, res) {",
+									"",
+									"    if (err) {",
+									"        console.log('Error:', err);",
+									"        return; ",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const productIds = responseJson.map(product => product.id);",
+									"",
+									"    if (productIds.length > 0) {",
+									"        const lastId = productIds[productIds.length - 1];",
+									"        pm.collectionVariables.set('lastProductId', lastId);",
+									"    } else {",
+									"        pm.collectionVariables.set('lastProductId', ''); ",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/products/4",
+							"raw": "{{baseUrl}}/products/{{lastProductId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"products",
-								"4"
+								"{{lastProductId}}"
 							]
 						}
 					},
@@ -140,6 +876,65 @@
 			"item": [
 				{
 					"name": "List orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    const jsonResponse = pm.response.json();\r",
+									"    pm.expect(jsonResponse).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"sku\"]\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -156,18 +951,394 @@
 					"response": []
 				},
 				{
-					"name": "Get order by ID",
+					"name": "Sort orders by sku in ascending order Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"sku\"]\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is sorted by sku in ascending order\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"\r",
+									"    const compareNumbers = (a, b) => a - b;\r",
+									"\r",
+									"    for (let i = 0; i < jsonData.length - 1; i++) {\r",
+									"        const currentSku = jsonData[i].sku;\r",
+									"        const nextSku = jsonData[i + 1].sku;\r",
+									"\r",
+									"        pm.expect(compareNumbers(currentSku, nextSku)).to.be.below(0);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/orders/3",
+							"raw": "{{baseUrl}}/orders?sortOrder=ASC&sortKey=sku",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "sortKey",
+									"value": "sku"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get paginated orders list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"const schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\r",
+									"  \"type\": \"array\",\r",
+									"  \"items\": {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"      \"id\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      },\r",
+									"      \"name\": {\r",
+									"        \"type\": \"string\"\r",
+									"      },\r",
+									"      \"sku\": {\r",
+									"        \"type\": \"integer\"\r",
+									"      }\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"name\", \"sku\"]\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response matches schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct number of orders\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    const page = parseInt(pm.collectionVariables.get('page'), 10);\r",
+									"    const pageSize = parseInt(pm.collectionVariables.get('pageSize'), 10);\r",
+									"    \r",
+									"    pm.expect(jsonData.length).to.eql(pageSize);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response page is correct\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    const page = parseInt(pm.collectionVariables.get('page'), 10);\r",
+									"    const pageSize = parseInt(pm.collectionVariables.get('pageSize'), 10);\r",
+									"    \r",
+									"    pm.expect(jsonData.length).to.be.at.most(pageSize);\r",
+									"\r",
+									"    if (jsonData.length > 0) {\r",
+									"        const startIndex = (page - 1) * pageSize;\r",
+									"        const endIndex = startIndex + jsonData.length - 1;\r",
+									"        pm.expect(startIndex).to.be.at.least(0);\r",
+									"        pm.expect(endIndex).to.be.at.most(pageSize - 1);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const url = pm.request.url.toString();",
+									"",
+									"function getQueryParams(url) {",
+									"    const params = {};",
+									"    const queryStringIndex = url.indexOf('?');",
+									"",
+									"    if (queryStringIndex !== -1) {",
+									"        const queryString = url.substring(queryStringIndex + 1);",
+									"",
+									"        queryString.split('&').forEach(param => {",
+									"            const [key, value] = param.split('=');",
+									"            params[key] = decodeURIComponent(value);",
+									"        });",
+									"    }",
+									"",
+									"    return params;",
+									"}",
+									"",
+									"const queryParams = getQueryParams(url);",
+									"const page = queryParams['page'] || '1';  ",
+									"const pageSize = queryParams['pageSize'] || '4'; ",
+									"",
+									"pm.collectionVariables.set('page', page);",
+									"pm.collectionVariables.set('pageSize', pageSize);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders?page=1&pageSize=3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/orders',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const orderIds = responseJson.map(order => order.id);",
+									"",
+									"    pm.collectionVariables.set('orderIds', orderIds.join(','));",
+									"",
+									"    function getRandomOrderId(array) {",
+									"        const randomIndex = Math.floor(Math.random() * array.length);",
+									"        return array[randomIndex];",
+									"    }",
+									"",
+									"    if (orderIds.length > 0) {",
+									"        const orderId = getRandomOrderId(orderIds);",
+									"        pm.collectionVariables.set('orderId', orderId);",
+									"    } else {",
+									"        pm.collectionVariables.set('orderId', '');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id value\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const orderId = pm.collectionVariables.get('orderId');",
+									"    pm.expect(jsonData.id).to.eql(orderId);",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"name\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"sku\": {",
+									"        \"type\": \"integer\"",
+									"      }",
+									"    },",
+									"    \"required\": [\"id\", \"name\", \"sku\"]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders/{{orderId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"orders",
-								"3"
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order by invalid ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									" function getRandomString(length) {",
+									"    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';",
+									"    let result = '';",
+									"    for (let i = 0; i < length; i++) {",
+									"        result += charset.charAt(Math.floor(Math.random() * charset.length));",
+									"    }",
+									"    return result;",
+									"}",
+									"",
+									"const randomString = getRandomString(5);",
+									"",
+									"pm.collectionVariables.set('randomString', randomString);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(404);",
+									"    pm.expect(statusText).to.eql('Not Found');",
+									"});",
+									"",
+									"pm.test(\"Response is an empty object\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(Object.keys(responseData)).to.have.lengthOf(0);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders/{{randomString}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders",
+								"{{randomString}}"
 							]
 						}
 					},
@@ -175,12 +1346,112 @@
 				},
 				{
 					"name": "Create order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// function getRandomString(length) {",
+									"//     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';",
+									"//     let result = '';",
+									"//     for (let i = 0; i < length; i++) {",
+									"//         result += charset.charAt(Math.floor(Math.random() * charset.length));",
+									"//     }",
+									"//     return result;",
+									"// }",
+									"",
+									"function getRandomNumber() {",
+									"    return Math.floor(Math.random() * 10000);",
+									"}",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/orders',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const orderIds = responseJson.map(order => order.id);",
+									"    const orderId = orderIds.length + 1;",
+									"    const orderName = `order${orderId}`;",
+									"    pm.collectionVariables.set('orderId', orderId);",
+									"    pm.collectionVariables.set('orderName', orderName);",
+									"    console.log(orderId, orderName);",
+									"});",
+									"// const orderId = pm.collectionVariables.get('orderId');",
+									"// const orderName = `order${orderId}`;",
+									"const randomSku = getRandomNumber();",
+									" ",
+									"",
+									"// pm.collectionVariables.set('orderName', orderName);",
+									"pm.collectionVariables.set('randomSku', randomSku);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"name\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"sku\": {",
+									"        \"type\": \"integer\"",
+									"      }",
+									"    },",
+									"    \"required\": [\"id\", \"name\", \"sku\"]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(201);",
+									"    pm.expect(statusText).to.eql('Created');",
+									"});",
+									"",
+									"pm.test(\"Check created product\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const orderId = pm.collectionVariables.get('orderId')",
+									"    const orderName = pm.collectionVariables.get('orderName');",
+									"    const orderSku = pm.collectionVariables.get('randomSku');",
+									"",
+									"    pm.expect(jsonData.id).to.eql(orderId);",
+									"    pm.expect(jsonData.name).to.eql(orderName);",
+									"    pm.expect(jsonData.sku).to.eql(orderSku);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"order5\",\r\n    \"sku\": 123425445656765\r\n}",
+							"raw": "{\r\n    \"id\": {{orderId}},\r\n    \"name\": \"{{orderName}}\",\r\n    \"sku\": {{randomSku}}\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -201,12 +1472,104 @@
 				},
 				{
 					"name": "Update order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function getRandomInt(min, max) {",
+									"    return Math.floor(Math.random() * (max - min + 1)) + min;",
+									"}",
+									"",
+									"function getRandomString(length) {",
+									"    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';",
+									"    let result = '';",
+									"    for (let i = 0; i < length; i++) {",
+									"        result += charset.charAt(Math.floor(Math.random() * charset.length));",
+									"    }",
+									"    return result;",
+									"}",
+									"",
+									"function getRandomNumber() {",
+									"    return Math.floor(Math.random() * 10000);",
+									"}",
+									"",
+									"const randomInt = getRandomInt(4, 10);",
+									"const randomName = `name_${getRandomString(5)}`;",
+									"const randomSku = getRandomNumber();",
+									"",
+									"pm.collectionVariables.set('randomInt', randomInt); ",
+									"pm.collectionVariables.set('orderId', randomInt);",
+									"pm.collectionVariables.set('randomName', randomName);",
+									"pm.collectionVariables.set('randomSku', randomSku);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"name\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"sku\": {",
+									"        \"type\": \"integer\"",
+									"      }",
+									"    },",
+									"    \"required\": [\"id\", \"name\", \"sku\"]",
+									"  }",
+									"};",
+									"",
+									"const orderName = pm.collectionVariables.get('randomName');",
+									"const orderSku = pm.collectionVariables.get('randomSku');",
+									"const orderId = pm.collectionVariables.get('randomInt');",
+									"",
+									"if(pm.response.code === 200) {",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"}); ",
+									"pm.test(\"Check updated order\", function () {",
+									"    const responseJson = pm.response.json();",
+									"",
+									"    pm.expect(responseJson.id).to.eql(orderId);",
+									"    pm.expect(responseJson.name).to.eql(orderName);",
+									"    pm.expect(responseJson.sku).to.eql(orderSku);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"} else {",
+									"    pm.test(\"Check error\", function () {",
+									"        pm.response.to.have.status(404);",
+									"        pm.response.to.have.body(`Item not found with ID${orderId}`);",
+									"    })",
+									"};",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"order5\",\r\n    \"sku\": 123425445656765\r\n}",
+							"raw": "{\r\n    \"id\": {{randomInt}},\r\n    \"name\": \"{{randomName}}\",\r\n    \"sku\": {{randomSku}}\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -227,17 +1590,100 @@
 				},
 				{
 					"name": "Remove order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"  \"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"name\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"sku\": {",
+									"        \"type\": \"integer\"",
+									"      }",
+									"    },",
+									"    \"required\": [\"id\", \"name\", \"sku\"]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response matches schema\", function () {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/orders/' + responseJson.id,",
+									"    method: 'GET'",
+									"}, function (err, res) {",
+									"    pm.test(\"Order should not exist after deletion\", function () {",
+									"        if (res) {",
+									"            pm.expect(res).to.have.status(404); ",
+									"        } else {",
+									"            console.error('Error checking product existence:', err);",
+									"        }",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/orders',",
+									"    method: 'GET'",
+									"}, function (err, res) {",
+									"",
+									"    if (err) {",
+									"        console.log('Error:', err);",
+									"        return; ",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const orderIds = responseJson.map(order => order.id);",
+									"",
+									"    if (orderIds.length > 0) {",
+									"        const lastOrderId = orderIds[orderIds.length - 1];",
+									"        pm.collectionVariables.set('lastOrderId', lastOrderId);",
+									"        console.log('lastOrderId:', lastOrderId);",
+									"    } else {",
+									"        pm.collectionVariables.set('lastOrderId', ''); ",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/orders/4",
+							"raw": "{{baseUrl}}/orders/{{lastOrderId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"orders",
-								"4"
+								"{{lastOrderId}}"
 							]
 						}
 					},
@@ -249,17 +1695,111 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "List users",
+					"name": "List users sorted by name in ascending order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"const schema = {",
+									"\"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"array\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"firstName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"lastName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"email\": {",
+									"        \"type\": \"string\",",
+									"        \"format\": \"email\"",
+									"      },",
+									"      \"dateOfBirth\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"emailVerified\": {",
+									"        \"type\": \"boolean\"",
+									"      },",
+									"      \"signUpDate\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"status\": {",
+									"        \"type\": \"string\",",
+									"      },",
+									"      \"level\": {",
+									"        \"type\": \"string\",",
+									"      }",
+									"    },",
+									"    \"required\": [",
+									"      \"id\",",
+									"      \"firstName\",",
+									"      \"lastName\",",
+									"      \"email\",",
+									"      \"dateOfBirth\",",
+									"      \"emailVerified\",",
+									"      \"signUpDate\",",
+									"      \"status\",",
+									"      \"level\"",
+									"    ]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Response is sorted by firstName in ascending order\", function () {",
+									"    const jsonData = pm.response.json();",
+									"",
+									"    for (let i = 0; i < jsonData.length - 1; i++) {",
+									"        const current = jsonData[i].firstName;",
+									"        const next = jsonData[i + 1].firstName;",
+									"",
+									"        pm.expect(current <= next).to.be.true;",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users",
+							"raw": "{{baseUrl}}/users?sortOrder=ASC&sortKey=firstName",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users"
+							],
+							"query": [
+								{
+									"key": "sortOrder",
+									"value": "ASC"
+								},
+								{
+									"key": "sortKey",
+									"value": "firstName"
+								}
 							]
 						}
 					},
@@ -267,17 +1807,133 @@
 				},
 				{
 					"name": "Get user by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id value\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    const userId = pm.collectionVariables.get('userId');",
+									"    pm.expect(jsonData.id).to.eql(userId);",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"const schema = {",
+									"\"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"firstName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"lastName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"email\": {",
+									"        \"type\": \"string\",",
+									"        \"format\": \"email\"",
+									"      },",
+									"      \"dateOfBirth\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"emailVerified\": {",
+									"        \"type\": \"boolean\"",
+									"      },",
+									"      \"signUpDate\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"status\": {",
+									"        \"type\": \"string\",",
+									"      },",
+									"      \"level\": {",
+									"        \"type\": \"string\",",
+									"      }",
+									"    },",
+									"    \"required\": [",
+									"      \"id\",",
+									"      \"firstName\",",
+									"      \"lastName\",",
+									"      \"email\",",
+									"      \"dateOfBirth\",",
+									"      \"emailVerified\",",
+									"      \"signUpDate\",",
+									"      \"status\",",
+									"      \"level\"",
+									"    ]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/users',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const userIds = responseJson.map(user => user.id);",
+									"",
+									"    pm.collectionVariables.set('userIds', userIds.join(','));",
+									"",
+									"    function getRandomUserId(array) {",
+									"        const randomIndex = Math.floor(Math.random() * array.length);",
+									"        return array[randomIndex];",
+									"    }",
+									"",
+									"    if (userIds.length > 0) {",
+									"        const userId = getRandomUserId(userIds);",
+									"        pm.collectionVariables.set('userId', userId);",
+									"    } else {",
+									"        pm.collectionVariables.set('userId', '');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users/3",
+							"raw": "{{baseUrl}}/users/{{userId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users",
-								"3"
+								"{{userId}}"
 							]
 						}
 					},
@@ -285,12 +1941,127 @@
 				},
 				{
 					"name": "Create user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/users',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const userIds = responseJson.map(user => user.id);",
+									"    const userId = userIds.length + 1;",
+									"    pm.collectionVariables.set('userId', userId);",
+									"});",
+									"",
+									"const statuses = ['admin', 'consumer', 'user', 'guest'];",
+									"function getRandomStatus(array) {",
+									"    const randomIndex = Math.floor(Math.random() * array.length);",
+									"        return array[randomIndex];",
+									"}",
+									"const randomStatus = getRandomStatus(statuses);",
+									"pm.collectionVariables.set('randomStatus', randomStatus);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"\"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"firstName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"lastName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"email\": {",
+									"        \"type\": \"string\",",
+									"        \"format\": \"email\"",
+									"      },",
+									"      \"dateOfBirth\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"emailVerified\": {",
+									"        \"type\": \"boolean\"",
+									"      },",
+									"      \"signUpDate\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"status\": {",
+									"        \"type\": \"string\",",
+									"      },",
+									"      \"level\": {",
+									"        \"type\": \"string\",",
+									"      }",
+									"    },",
+									"    \"required\": [",
+									"      \"id\",",
+									"      \"firstName\",",
+									"      \"lastName\",",
+									"      \"email\",",
+									"      \"dateOfBirth\",",
+									"      \"emailVerified\",",
+									"      \"signUpDate\",",
+									"      \"status\",",
+									"      \"level\"",
+									"    ]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(201);",
+									"    pm.expect(statusText).to.eql('Created');",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Dream\",\r\n    \"lastName\": \"Real\",\r\n    \"email\": \"dream.real@gmail.com\",\r\n    \"dateOfBirth\": \"2001-10-99\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2019-08-24\",\r\n    \"status\": \"active\",\r\n    \"level\": \"lord\"\r\n}",
+							"raw": "{\r\n    \"id\": {{userId}},\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"dateOfBirth\": \"{{$randomDatePast}}\",\r\n    \"emailVerified\": {{$randomBoolean}},\r\n    \"signUpDate\": \"{{$randomDatePast}}\",\r\n    \"status\": \"{{randomStatus}}\",\r\n    \"level\": \"{{$randomWord}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -311,12 +2082,135 @@
 				},
 				{
 					"name": "Update user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/users',",
+									"    method: 'GET'",
+									"}, function(err, res) {",
+									"    if (err) {",
+									"        console.error('Error fetching products:', err);",
+									"        return;",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const userIds = responseJson.map(user => user.id);",
+									"",
+									"    pm.collectionVariables.set('userIds', userIds.join(','));",
+									"",
+									"    function getRandomUserId(array) {",
+									"        const randomIndex = Math.floor(Math.random() * array.length);",
+									"        return array[randomIndex];",
+									"    }",
+									"",
+									"    if (userIds.length > 0) {",
+									"        const userId = getRandomUserId(userIds);",
+									"        pm.collectionVariables.set('userId', userId);",
+									"    } else {",
+									"        pm.collectionVariables.set('userId', '');",
+									"    }",
+									"});",
+									"",
+									"const statuses = ['admin', 'consumer', 'user', 'guest'];",
+									"function getRandomStatus(array) {",
+									"    const randomIndex = Math.floor(Math.random() * array.length);",
+									"        return array[randomIndex];",
+									"}",
+									"const randomStatus = getRandomStatus(statuses);",
+									"pm.collectionVariables.set('randomStatus', randomStatus);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"\"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"firstName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"lastName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"email\": {",
+									"        \"type\": \"string\",",
+									"        \"format\": \"email\"",
+									"      },",
+									"      \"dateOfBirth\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"emailVerified\": {",
+									"        \"type\": \"boolean\"",
+									"      },",
+									"      \"signUpDate\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"status\": {",
+									"        \"type\": \"string\",",
+									"      },",
+									"      \"level\": {",
+									"        \"type\": \"string\",",
+									"      }",
+									"    },",
+									"    \"required\": [",
+									"      \"id\",",
+									"      \"firstName\",",
+									"      \"lastName\",",
+									"      \"email\",",
+									"      \"dateOfBirth\",",
+									"      \"emailVerified\",",
+									"      \"signUpDate\",",
+									"      \"status\",",
+									"      \"level\"",
+									"    ]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(200);",
+									"    pm.expect(statusText).to.eql('OK');",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Ilon\",\r\n    \"lastName\": \"Mask\",\r\n    \"email\": \"ilon.mask@gmail.com\",\r\n    \"dateOfBirth\": \"2001-10-99\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2019-08-24\",\r\n    \"status\": \"active\",\r\n    \"level\": \"lord\",\r\n    \"id\": 10\r\n}",
+							"raw": "{\r\n    \"id\": {{userId}},\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"dateOfBirth\": \"{{$randomDatePast}}\",\r\n    \"emailVerified\": {{$randomBoolean}},\r\n    \"signUpDate\": \"{{$randomDatePast}}\",\r\n    \"status\": \"{{randomStatus}}\",\r\n    \"level\": \"{{$randomWord}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -337,17 +2231,143 @@
 				},
 				{
 					"name": "Remove user by ID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/users',",
+									"    method: 'GET'",
+									"}, function (err, res) {",
+									"",
+									"    if (err) {",
+									"        console.log('Error:', err);",
+									"        return; ",
+									"    }",
+									"",
+									"    let responseJson = res.json();",
+									"    const userIds = responseJson.map(user => user.id);",
+									"",
+									"    if (userIds.length > 0) {",
+									"        const lastId = userIds[userIds.length - 1];",
+									"        pm.collectionVariables.set('lastUserId', lastId);",
+									"    } else {",
+									"        pm.collectionVariables.set('lastUserId', ''); ",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const schema = {",
+									"\"$schema\": \"http://json-schema.org/draft-07/schema#\",",
+									"  \"type\": \"object\",",
+									"  \"items\": {",
+									"    \"type\": \"object\",",
+									"    \"properties\": {",
+									"      \"id\": {",
+									"        \"type\": \"integer\"",
+									"      },",
+									"      \"firstName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"lastName\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"email\": {",
+									"        \"type\": \"string\",",
+									"        \"format\": \"email\"",
+									"      },",
+									"      \"dateOfBirth\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"emailVerified\": {",
+									"        \"type\": \"boolean\"",
+									"      },",
+									"      \"signUpDate\": {",
+									"        \"type\": \"string\"",
+									"      },",
+									"      \"status\": {",
+									"        \"type\": \"string\",",
+									"      },",
+									"      \"level\": {",
+									"        \"type\": \"string\",",
+									"      }",
+									"    },",
+									"    \"required\": [",
+									"      \"id\",",
+									"      \"firstName\",",
+									"      \"lastName\",",
+									"      \"email\",",
+									"      \"dateOfBirth\",",
+									"      \"emailVerified\",",
+									"      \"signUpDate\",",
+									"      \"status\",",
+									"      \"level\"",
+									"    ]",
+									"  }",
+									"};",
+									"",
+									"pm.test(\"Response matches schema\", function() {",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    const statusCode = pm.response.code;",
+									"    const statusText = pm.response.status;",
+									"    pm.expect(statusCode).to.eql(200);",
+									"    pm.expect(statusText).to.eql('OK');",
+									"});",
+									"",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", () => {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"const responseJson = pm.response.json();",
+									"",
+									"pm.sendRequest({",
+									"    url: pm.collectionVariables.get('baseUrl') + '/users/' + responseJson.id,",
+									"    method: 'GET'",
+									"}, function (err, res) {",
+									"    pm.test(\"User should not exist after deletion\", function () {",
+									"        if (res) {",
+									"            pm.expect(res).to.have.status(404); ",
+									"        } else {",
+									"            console.error('Error checking product existence:', err);",
+									"        }",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/users/10",
+							"raw": "{{baseUrl}}/users/{{lastUserId}}",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users",
-								"10"
+								"{{lastUserId}}"
 							]
 						}
 					},
@@ -381,6 +2401,86 @@
 			"key": "baseUrl",
 			"value": "http://localhost:3000",
 			"type": "string"
+		},
+		{
+			"key": "randomName",
+			"value": ""
+		},
+		{
+			"key": "randomPrice",
+			"value": ""
+		},
+		{
+			"key": "randomSku",
+			"value": ""
+		},
+		{
+			"key": "randomDescription",
+			"value": ""
+		},
+		{
+			"key": "page",
+			"value": ""
+		},
+		{
+			"key": "pageSize",
+			"value": ""
+		},
+		{
+			"key": "productId",
+			"value": ""
+		},
+		{
+			"key": "randomNumber",
+			"value": ""
+		},
+		{
+			"key": "randomInt",
+			"value": ""
+		},
+		{
+			"key": "randomString",
+			"value": ""
+		},
+		{
+			"key": "productIds",
+			"value": ""
+		},
+		{
+			"key": "lastProductId",
+			"value": ""
+		},
+		{
+			"key": "orderIds",
+			"value": ""
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		},
+		{
+			"key": "orderName",
+			"value": ""
+		},
+		{
+			"key": "lastOrderId",
+			"value": ""
+		},
+		{
+			"key": "userIds",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "randomStatus",
+			"value": ""
+		},
+		{
+			"key": "lastUserId",
+			"value": ""
 		}
 	]
 }

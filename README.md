@@ -1,17 +1,34 @@
-# Postman + newman + github actions (Simple store template)
+# Postman-newman-ghActions tests
 
-<a href="https://drive.google.com/file/d/1LQ1uG7Tt70Jubuk5loS4dMSk-1AJ5jzz/view?usp=sharing" /> Intro </a>
+## Description
 
-## Task steps / First task
-1. Read: 
-- <a href="https://svitla.com/blog/testing-rest-api-with-postman-and-curl"> Postman & Curl & REST article </a> 
-- <a href="https://learning.postman.com/docs/writing-scripts/script-references/test-examples/">Postman tests examples (off doc)</a>
-- <a href="https://drive.google.com/file/d/1ftlfK91TXTS9GH7ufEXsGujop_LpC5ef/view?usp=sharing" /> Manual schema generation </a>
-2. Download this repo.
-3. Run `npm i` (install node.js dependencies)
-4. Run `npm run tern-on-api`(to run testing server locally )
+This project demonstrates a basic REST API for managing products, orders, and users. It includes integration tests using Postman and automated testing with GitHub Actions.
 
-### Overview of local server testing
+## Requirements
+
+- Node.js
+- npm
+- Postman
+- Newman
+
+## Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ArtemPerehonchuk/Postman-newman-ghActions.git
+   cd Postman-newman-ghActions
+   ```
+
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
+3. Start the local server:
+    ```bash
+    npm run tern-on-api
+    ```
+
+## API Routes
 Routes `/products`, `/orders` and `/users`. Below is a table of supported operations with `products` as example resource. The same operations are also supports for `orders/` and `users/`.
 
 | VERB     |Route          | Input      | Output             |
@@ -23,32 +40,37 @@ Routes `/products`, `/orders` and `/users`. Below is a table of supported operat
 | DELETE   | /products/:id | **e.g 3**  | **Deleted object** |
 
 
-5. Upload `store.collection.json` in Postman app. (skip this exhibit in case you decide to use another public API ) 
-6. Make some integration tests in Postman, could be status code/JSON check and so on. ( in case with another API - write tests based on another one).
+##  Testing with Postman:
 
-Examples:
-- Test pagination, by way like `http://localhost:3000/users?page=1&pageSize=2`. 
-- Test sorting, by way like `http://localhost:3000/users?sortOrder=ASC&sortKey=firstName`. You can sort an any resource response using query parameters sortOrder and sortKey.
--  Test status code for REST API (200,400 and so on).
--  Test response time.
--  Test response thanks to json schema validation.
--  Try to follow `AAA` approach (arrange, act, assert).
+1. Open Postman.
+2. Import the store.collection.json collection.
+3. Run integration tests.
 
-7. Save new collection with your new integration tests with the same name as `store.collection.json`. ( in case with another API - another file name for json file)
-8. Push to you github repo in main branch ( in case with local server - save local server as well )
+## Running Tests Locally with Newman:
 
-###  GH actions practice / Second Task
-9. Add Github action to run `petstore.collection.json` in Github pages by <a href="https://www.linkedin.com/pulse/running-postman-collections-via-github-action-nirmala-jayasanka"> article </a> or use another GH action.
-10. Check github actions for result.
+Newman is a command-line tool that allows you to run Postman collections. To run tests locally using Newman:
 
+1. Install Newman locally:
+    ```bash
+    npm install newman --save-dev
+    ````
+2.  Run the Postman collection and viewing result:
 
-You can use another API to perform  your testing instead of local store API and `store.collection.json`. 
-- <a href="https://github.com/public-apis/public-apis"> Public API list </a>
+- To run tests and generate report:
+    ```bash
+    npm run test:run
+    ```
+- Open report:
 
-### Usefull links (skip this)
-Examples with different actions in Postman workspace (only take a look once, no need to learn this) 
-- <a href="https://www.postman.com/postman/workspace/postman-answers"> Postman answers </a>
-- <a href="https://restfulapi.net"> REST API Tutorial </a>
+- Open on macOS via terminal:
+    ```bash
+    open output.html
+    ````
+- Open on Windows via Command Prompt:
+    ```bash
+    start output.html
+    ```
 
-Doc for json schema validation, to check output API response (only take a look once, no need to learn this doc) 
-- <a href="https://json-schema.org"> json schema docs </a>
+## GitHub Actions Integration:
+
+GitHub Actions will run the tests on every push and pull request to the main branch. You can view the results in the "Actions" tab of your GitHub repository.

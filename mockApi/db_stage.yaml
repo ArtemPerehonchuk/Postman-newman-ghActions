@@ -29,14 +29,14 @@ orders:
     sku: 999921312423312
 users:
   - id: 1
-    firstName: Alice
-    lastName: Smith
-    email: alice.smith@gmail.com
-    dateOfBirth: 1997-10-31
-    emailVerified: true
-    signUpDate: 2019-08-24
-    status: active
-    level: admin
+    firstName: Nina
+    lastName: Bashirian
+    email: Lavada34@gmail.com
+    dateOfBirth: Fri May 03 2024 13:56:08 GMT+0300 (Eastern European Summer Time)
+    emailVerified: false
+    signUpDate: Mon Oct 30 2023 20:26:51 GMT+0200 (Eastern European Standard Time)
+    status: guest
+    level: Toys
   - id: 2
     firstName: Bob
     lastName: Smith
@@ -92,24 +92,15 @@ users:
     status: active
     level: consumer
   - id: 8
-    firstName: kukareku
-    lastName: kukareku
-    email: kukareku.smith@gmail.com
-    dateOfBirth: 1997-10-31
-    emailVerified: false
-    signUpDate: 2019-08-24
-    status: active
-    level: consumer
+    firstName: Shannon
+    lastName: Reichert
+    email: Guillermo_Miller39@hotmail.com
+    dateOfBirth: Sat Oct 07 2023 22:59:47 GMT+0300 (Eastern European Summer Time)
+    emailVerified: true
+    signUpDate: Mon Dec 25 2023 09:06:22 GMT+0200 (Eastern European Standard Time)
+    status: guest
+    level: invoice
   - id: 9
-    firstName: asdasd
-    lastName: asd
-    email: asdasd.smith@gmail.com
-    dateOfBirth: 1997-10-31
-    emailVerified: false
-    signUpDate: 2019-08-24
-    status: active
-    level: consumer
-  - id: 10
     firstName: asdasd
     lastName: asd
     email: asdasd.smith@gmail.com
