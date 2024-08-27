@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "tern-on-api": "cp mockApi/db_back_up.yaml mockApi/db_stage.yaml && npx yaml-server --hotReload=off --autoStart=off --port 3000 --database ./mockApi/db_stage.yaml",
-    "test:api": "npx newman run store.collection.json -r htmlextra --reporter-htmlextra-export index.html",
+    "test:api": "npx newman run store.collection.json -r htmlextra --reporter-htmlextra-export testResults/index.html",
     "test:run": "npm run tern-on-api & sleep 5 & npm run test:api"
   },
   "keywords": [

@@ -24,6 +24,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Prepare deployment directory
+        run: mkdir -p testResults
+
       - name: Start Mock API and Run Tests
         run: |
           npm run tern-on-api &
@@ -34,12 +37,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: newman-report
-          path: output.html
-
-      - name: Prepare deployment directory
-        run: |
-          mkdir -p testResults
-          cp output.html testResults/
+          path: testResults
 
       - name: Deploy to GitHub Pages
         if: always()
