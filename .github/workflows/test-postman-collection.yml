@@ -26,8 +26,8 @@ jobs:
 
       - name: Start Mock API and Run Tests
         run: |
-          npm run tern-on-api & 
-          sleep 5 
+          npm run start-api &
+          sleep 10 
           npm run test:api
 
       - name: Upload HTML Report
@@ -36,19 +36,15 @@ jobs:
           name: newman-report
           path: output.html
 
-      - name: Deploy to GitHub Pages
-        if: ${{ success() }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare deployment directory
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git fetch origin gh-pages || git checkout --orphan gh-pages
-          git reset --hard
+          mkdir -p testResults
+          cp output.html testResults/
 
-          mkdir -p output
-          cp output.html output/
-
-          git add output/
-          git commit -m "Deploy newman report"
-          git push origin gh-pages --force
+      - name: Deploy to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: testResults
