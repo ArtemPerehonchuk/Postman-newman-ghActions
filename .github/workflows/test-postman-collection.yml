@@ -26,7 +26,7 @@ jobs:
 
       - name: Start Mock API and Run Tests
         run: |
-          npm run start-api &
+          npm run tern-on-api &
           sleep 10 
           npm run test:api
 
